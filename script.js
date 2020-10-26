@@ -11,9 +11,22 @@ $("#find-city").on("click", function(event){
     })
    
      .then(function(response) {
-        console.log(queryURL)
         console.log(response)
-    
+        
+     let cityName = response.name;
+     let cityTemp = response.main.temp;
+     let cityHumid = response.main.humidity
+     let cityWind = response.wind.speed;
+     //let cityUv = 
+     cityTemp = (cityTemp -273.15) * 1.80 + 32
+
+
+
+     $(".city").text(cityName);
+     $(".temp").text("Temperature: " + parseInt(cityTemp)); 
+     $(".humidity").text("Humidity: " + cityHumid + " %");  
+     $(".wind").text("Wind Speed: " + cityWind + " MPH");
+     $(".uvIndex").text(cityUv);
     }) 
 
 
