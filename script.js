@@ -4,15 +4,12 @@ $(document).ready(function () {
     let city = $("#city-search").val();
     $("#city-search").val("");
     findWeather(city);
+    forecast(city);
   });
 
   function findWeather(city) {
     var currentWeatherURL =
       "https://api.openweathermap.org/data/2.5/weather?q=" +
-      city +
-      "&appid=bf07b2cbcf62e6d7ae2b1536e215c869";
-    var forecastURL =
-      "https://api.openweathermap.org/data/2.5/forecast?q=" +
       city +
       "&appid=bf07b2cbcf62e6d7ae2b1536e215c869";
 
@@ -29,7 +26,6 @@ $(document).ready(function () {
           previousSearch(searchHistory);
         }
 
-        console.log(response.name);
         console.log(response);
         let tempConversation = (response.main.temp - 273.15) * 1.8 + 32;
         var card = $("<div>").addClass("card");
@@ -60,11 +56,59 @@ $(document).ready(function () {
         //$(".uvIndex").text(cityUv);
       },
     });
+  }
+
+  function forecast(city) {
+    var forecastURL =
+      "https://api.openweathermap.org/data/2.5/forecast?q=" +
+      city +
+      "&appid=bf07b2cbcf62e6d7ae2b1536e215c869";
+
     $.ajax({
       url: forecastURL,
       method: "GET",
       success: function (forecast) {
         console.log(forecast);
+        let list = forecast.list;
+        //$("#forecast").html("");
+
+        for (let i = 39; i >= 0; i = i - 8) {
+          var temp = ((list[i].main.temp - 273.15) * 1.8 + 32).toFixed(2);
+          var iconId = list[i].weather[0].icon;
+          var humidity = list[i].main.humidity;
+          var date = list[i].dt_txt;
+
+          //Commented these out as it was causing error
+          //var day = date.getDate();
+          //var month = date.getMonth();
+          //var year = date.getFullYear();
+
+          var formatedDate = `${month + 1}/${day}/${year}`;
+
+          var col = $("<div>");
+          col.addClass("col");
+          var myCard = $("<div>");
+          myCard.addClass("card");
+          col.append(myCard);
+
+          var pTag = $("<p>").text(formatedDate);
+
+          var iconUrl =
+            "https://openweathermap.org/img/wn/" + iconId + "@2x.png";
+          var weatherPic = $("<img>");
+
+          weatherPic.attr("src", iconUrl);
+
+          var pTag2 = $("<p>").text("Temp: " + temp + "°F");
+          var pTag3 = $("<p>").text("Humidity: " + humidity + "%");
+
+          myCard.append(pTag);
+          myCard.append(weatherPic);
+          myCard.append(pTag2);
+          myCard.append(pTag3);
+
+          $("forecastBlocks").prepend(col);
+        }
       },
     });
   }
