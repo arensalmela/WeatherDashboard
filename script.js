@@ -1,5 +1,6 @@
 $(document).ready(function () {
   let cityInput = $("#city-search");
+  const forecastDaysIndex = [3, 11, 19, 27, 35];
   $("#find-city").on("click", function (event) {
     event.preventDefault();
     let city = cityInput.val();
@@ -25,9 +26,8 @@ $(document).ready(function () {
             JSON.stringify(searchHistory)
           );
           previousSearch(searchHistory);
-          $("#today").val = "";
         }
-
+        document.getElementById("today").innerHTML = "";
         console.log(response);
         let tempConversation = (response.main.temp - 273.15) * 1.8 + 32;
         var card = $("<div>").addClass("card");
@@ -51,13 +51,6 @@ $(document).ready(function () {
         $("#today").append(card);
 
         getUv(response);
-
-        //getUv(lat, lon);
-        //$(".city").text(cityName);
-        //$(".temp").text("Temperature: " + parseInt(cityTemp) + " ℉");
-        //$(".humidity").text("Humidity: " + cityHumid + " %");
-        //$(".wind").text("Wind Speed: " + cityWind + " MPH");
-        //$(".uvIndex").text(cityUv);
       },
     });
   }
@@ -77,7 +70,18 @@ $(document).ready(function () {
       method: "GET",
     }).then(function (response) {
       console.log(response, "UV index");
-      $("#uvIndex").text("UV Index : " + response.value);
+      document.getElementById("uvIndex").innerHTML = "";
+      let cityUvCard = $("<div>").addClass("card");
+      var uVcardBody = $("<div>").addClass("card-body");
+      let cityUv = $("<p>")
+        .addClass("card-text")
+        .text("UV Index : " + response.value);
+
+      uVcardBody.append(cityUv);
+      cityUvCard.append(uVcardBody);
+      $("#uvIndex").append(cityUvCard);
+
+      //$("#uvIndex").text("UV Index : " + response.value);
     });
   }
 
@@ -91,13 +95,18 @@ $(document).ready(function () {
       url: forecastURL,
       method: "GET",
       success: function (forecast) {
-        console.log(forecast);
+        console.log(forecast, "FORECAST OBJECT");
         let list = forecast.list;
-
-        for (let i = 39; i >= 0; i = i - 8) {
-          var temp = ((list[i].main.temp - 273.15) * 1.8 + 32).toFixed(2);
+        document.getElementById("forecastBlocks").innerHTML = "";
+        for (let i = 0; i < forecastDaysIndex.length; i++) {
+          var index = forecastDaysIndex[i];
+          console.log(index);
+          var temp = ((list[index].main.temp - 273.15) * 1.8 + 32).toFixed(2);
+          console.log(temp);
           var iconId = list[i].weather[0].icon;
+          console.log(iconId);
           var humidity = list[i].main.humidity;
+          console.log(humidity);
           //var date = list[i].dt_txt;
 
           //Commented these out as it was causing error
@@ -107,7 +116,7 @@ $(document).ready(function () {
           var day = "29";
           var month = "10";
           var year = "2020";
-          var formatedDate = `${month + 1}/${day}/${year}`;
+          var formatedDate = `${month}/${day}/${year}`;
 
           var col = $("<div>");
           col.addClass("col");
@@ -116,7 +125,7 @@ $(document).ready(function () {
           col.append(myCard);
 
           var pTag = $("<p>").text(formatedDate);
-
+          console.log(formatedDate);
           var iconUrl =
             "https://openweathermap.org/img/wn/" + iconId + "@2x.png";
           var weatherPic = $("<img>");
@@ -131,7 +140,7 @@ $(document).ready(function () {
           myCard.append(pTag2);
           myCard.append(pTag3);
           console.log(myCard);
-          $("forecastBlocks").prepend(col);
+          $("#forecastBlocks").prepend(col);
         }
       },
     });
