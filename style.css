@@ -1,0 +1,16 @@
+body {
+  background-image: url(assets/skyimage.jpg);
+  background-size: 100%;
+}
+
+.beige {
+  background-color: beige;
+}
+
+.card {
+  background-color: rgb(121, 150, 184);
+}
+
+.redText {
+  color: crimson;
+}

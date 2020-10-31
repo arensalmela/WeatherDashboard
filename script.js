@@ -1,5 +1,9 @@
 $(document).ready(function () {
+  //User input is collected
+
   let cityInput = $("#city-search");
+
+  // Array used to grab the days for forecast
   const forecastDaysIndex = [35, 27, 19, 11, 3];
   $("#find-city").on("click", function (event) {
     event.preventDefault();
@@ -9,6 +13,7 @@ $(document).ready(function () {
     forecast(city);
   });
 
+  //Search for weather using city api
   function findWeather(city) {
     var currentWeatherURL =
       "https://api.openweathermap.org/data/2.5/weather?q=" +
@@ -46,7 +51,7 @@ $(document).ready(function () {
         cardBody.append(cityName);
         cardBody.append(cityTemp);
         cardBody.append(cityHumid);
-        cardBody.append(cityWind); //Repeat for each weather variable within para
+        cardBody.append(cityWind);
         card.append(cardBody);
         $("#today").append(card);
 
@@ -54,6 +59,7 @@ $(document).ready(function () {
       },
     });
   }
+  // UV index API
 
   function getUv(response) {
     var lat = response.coord.lat;
@@ -80,6 +86,12 @@ $(document).ready(function () {
       uVcardBody.append(cityUv);
       cityUvCard.append(uVcardBody);
       $("#uvIndex").append(cityUvCard);
+
+      //attempt to turning UV index red if at a dangerous level
+
+      if (response.value > 6) {
+        cityUv.addClass("redText");
+      }
     });
   }
 
@@ -97,6 +109,8 @@ $(document).ready(function () {
         let list = forecast.list;
         document.getElementById("forecastBlocks").innerHTML = "";
         for (let i = 0; i < forecastDaysIndex.length; i++) {
+          //Setting variables for forecast information
+
           var index = forecastDaysIndex[i];
           console.log(index);
           var temp = ((list[index].main.temp - 273.15) * 1.8 + 32).toFixed(2);
@@ -111,6 +125,8 @@ $(document).ready(function () {
           var month = jsDate.getMonth() + 1;
           var year = jsDate.getFullYear();
           var formatedDate = `${month}/${day}/${year}`;
+
+          //Appending html elements to cards
 
           var col = $("<div>");
           col.addClass("col");
@@ -128,6 +144,8 @@ $(document).ready(function () {
 
           var pTag2 = $("<p>").text("Temp: " + temp + "°F");
           var pTag3 = $("<p>").text("Humidity: " + humidity + "%");
+
+          //Dynamically adding cards to forecast section of HTML
 
           myCard.append(pTag);
           myCard.append(weatherPic);
@@ -147,7 +165,7 @@ $(document).ready(function () {
   var searchHistory =
     JSON.parse(window.localStorage.getItem("search-history")) || [];
   if (searchHistory.length > 0) {
-    findWeather(searchHistory[searchHistory.length - 1]); // Displaying most recent search
+    findWeather(searchHistory[searchHistory.length - 1]);
   }
 
   for (let i = 0; i < searchHistory.length; i++) {
