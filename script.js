@@ -1,6 +1,6 @@
 $(document).ready(function () {
   let cityInput = $("#city-search");
-  const forecastDaysIndex = [3, 11, 19, 27, 35];
+  const forecastDaysIndex = [35, 27, 19, 11, 3];
   $("#find-city").on("click", function (event) {
     event.preventDefault();
     let city = cityInput.val();
@@ -80,8 +80,6 @@ $(document).ready(function () {
       uVcardBody.append(cityUv);
       cityUvCard.append(uVcardBody);
       $("#uvIndex").append(cityUvCard);
-
-      //$("#uvIndex").text("UV Index : " + response.value);
     });
   }
 
@@ -107,15 +105,11 @@ $(document).ready(function () {
           console.log(iconId);
           var humidity = list[i].main.humidity;
           console.log(humidity);
-          //var date = list[i].dt_txt;
-
-          //Commented these out as it was causing error
-          //var day = date.getDate();
-          //var month = date.getMonth();
-          //var year = date.getFullYear();
-          var day = "29";
-          var month = "10";
-          var year = "2020";
+          var date = list[index].dt_txt.split(" ")[0];
+          var jsDate = new Date(date);
+          var day = jsDate.getDate();
+          var month = jsDate.getMonth() + 1;
+          var year = jsDate.getFullYear();
           var formatedDate = `${month}/${day}/${year}`;
 
           var col = $("<div>");
