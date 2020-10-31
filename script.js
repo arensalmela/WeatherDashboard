@@ -4,6 +4,7 @@ $(document).ready(function () {
   let cityInput = $("#city-search");
 
   // Array used to grab the days for forecast
+
   const forecastDaysIndex = [35, 27, 19, 11, 3];
   $("#find-city").on("click", function (event) {
     event.preventDefault();
@@ -65,7 +66,7 @@ $(document).ready(function () {
     var lat = response.coord.lat;
     var lon = response.coord.lon;
     var indexUrl =
-      "http://api.openweathermap.org/data/2.5/uvi?lat=" +
+      "https://api.openweathermap.org/data/2.5/uvi?lat=" +
       lat +
       "&lon=" +
       lon +
@@ -85,6 +86,7 @@ $(document).ready(function () {
 
       uVcardBody.append(cityUv);
       cityUvCard.append(uVcardBody);
+      console.log($("#uvIndex"));
       $("#uvIndex").append(cityUvCard);
 
       //attempt to turning UV index red if at a dangerous level
