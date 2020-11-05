@@ -27,11 +27,8 @@ $(document).ready(function () {
       success: function (response) {
         if (searchHistory.indexOf(city) === -1) {
           searchHistory.push(city);
-          window.localStorage.setItem(
-            "search-history",
-            JSON.stringify(searchHistory)
-          );
-          previousSearch(searchHistory);
+          window.localStorage.setItem("search-history", JSON.stringify(city));
+          previousSearch(city);
         }
         document.getElementById("today").innerHTML = "";
         console.log(response);
